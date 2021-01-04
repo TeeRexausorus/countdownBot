@@ -9,7 +9,7 @@ const countDownDate = new Date("Mar 20, 2021 12:00:00").getTime();
 
 function getCountdownAsString() {
     // Get today's date and time
-    let now = new Date().getTime() - (1000 * 60 * 60);
+    let now = new Date().getTime() + (1000 * 60 * 60);
 
     // Find the distance between now and the countdown date
     let distance = countDownDate - now;
