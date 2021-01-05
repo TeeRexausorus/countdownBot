@@ -1,7 +1,14 @@
+//init pour Discord
 require('dotenv').config();
 const Discord = require('discord.js');
 const fs = require('fs');
 const bot = new Discord.Client();
+
+
+const {Client} = require('pg');
+const client = new Client();
+client.connect();
+
 
 const TOKEN = process.env.TOKEN;
 const filename = 'countUp';
@@ -57,27 +64,25 @@ bot.on('message', message => {
             message.channel.send(getCountdownAsString());
         }
     }
-    if (message.content === '!countup'){
-        if (message.author.username === 'Remouk'){
-            if(fs.existsSync(filename)){
-                let nbCountup = parseInt(fs.readFileSync(filename, 'utf8'));
-                nbCountup++;
-                fs.writeFileSync(filename, `${nbCountup}`)
-            }
-            else {
-                fs.writeFileSync(filename, '1');
-            }
+    if (message.content === '!countup') {
+        if (message.author.username === 'Remouk') {
+            const insertContupDate = 'INSERT INTO countup(date) VALUES(current_timestamp)';
+            client.query(insertContupDate, (err) => {
+                if (err) {
+                    console.log(err.stack)
+                }
+            });
             message.channel.send('🖕');
+        } else {
+            client
+                .query('SELECT COUNT(date) as nbDate FROM countup')
+                .then(res => {
+                    valObject = res.rows[0];
+                    nbCountup = valObject[res.fields[0].name];
+                        message.channel.send(nbCountup > 0 ? `Remouk a reçu ${nbCountup} 🖕` : `Remouk a reçu ${nbCountup} 🖕, trop nul !`);
+                })
+                .catch(e => console.error(e.stack));
         }
-        else {
-            if(fs.existsSync(filename)){
-                let nbCountup = parseInt(fs.readFileSync(filename, 'utf8'));
-                message.channel.send(`Remouk a reçu ${nbCountup} 🖕`);
-            }
-            else {
-                message.channel.send('Remouk a reçu 0 🖕, c\'est triste.');
-            }
-        }
-
     }
 });
+
