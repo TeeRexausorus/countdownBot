@@ -51,6 +51,7 @@ bot.on('ready', () => {
 
 bot.on('message', message => {
     if (message.content === '!countdown') {
+        console.log(message.author.username);
         if (message.author.username === 'Blue') {
             message.channel.send(getCountdownAsString(0));
         } else {
