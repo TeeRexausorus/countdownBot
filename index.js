@@ -1,10 +1,10 @@
 require('dotenv').config();
 const Discord = require('discord.js');
-
+const fs = require('fs');
 const bot = new Discord.Client();
 
 const TOKEN = process.env.TOKEN;
-
+const filename = 'countUp';
 const countDownDate = new Date("Mar 20, 2021 12:00:00").getTime();
 
 function getRandomInt(max) {
@@ -58,7 +58,27 @@ bot.on('message', message => {
         }
     }
     if (message.content === '!countup'){
-        message.channel.send('🖕');
+        if (message.author.username === 'Remouk'){
+            if(fs.existsSync(filename)){
+                let nbCountup = parseInt(fs.readFileSync(filename, 'utf8'));
+                console.log(nbCountup);
+                nbCountup++;
+                fs.writeFileSync(filename, `${nbCountup}`)
+            }
+            else {
+                fs.writeFileSync(filename, '1');
+            }
+            message.channel.send('🖕');
+        }
+        else {
+            if(fs.existsSync(filename)){
+                let nbCountup = parseInt(fs.readFileSync(filename, 'utf8'));
+                message.channel.send(`Remouk a reçu ${nbCountup} 🖕`);
+            }
+            else {
+                message.channel.send('Remouk a reçu 0 🖕, c\'est triste.');
+            }
+        }
 
     }
 });
