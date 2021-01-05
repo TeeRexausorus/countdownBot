@@ -61,7 +61,6 @@ bot.on('message', message => {
         if (message.author.username === 'Remouk'){
             if(fs.existsSync(filename)){
                 let nbCountup = parseInt(fs.readFileSync(filename, 'utf8'));
-                console.log(nbCountup);
                 nbCountup++;
                 fs.writeFileSync(filename, `${nbCountup}`)
             }
