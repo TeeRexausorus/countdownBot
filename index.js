@@ -24,7 +24,7 @@ function getCountdownAsString(blockedVal) {
     let seconds = Math.floor((distance % (1000 * 60)) / 1000);
     let outputBrute = `Les mariages auront lieu dans ${days} jours, ${hours} heures, ${minutes} minutes, et ${seconds} secondes.`;
 
-    let randomVal = blockedVal ? blockedVal : getRandomInt(6);
+    let randomVal = blockedVal >= 0 ? blockedVal : getRandomInt(6);
     switch (randomVal) {
         case 0:
             return ('```ini' + '\n[' + outputBrute + ']\n```');
@@ -51,7 +51,6 @@ bot.on('ready', () => {
 
 bot.on('message', message => {
     if (message.content === '!countdown') {
-        console.log(message.author.username);
         if (message.author.username === 'Blue') {
             message.channel.send(getCountdownAsString(0));
         } else {
