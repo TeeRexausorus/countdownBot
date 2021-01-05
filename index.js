@@ -57,4 +57,8 @@ bot.on('message', message => {
             message.channel.send(getCountdownAsString());
         }
     }
+    if (message.content === '!countup'){
+        message.channel.send('🖕');
+
+    }
 });
