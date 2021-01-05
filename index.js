@@ -22,15 +22,24 @@ function getCountdownAsString(blockedVal) {
     let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     let seconds = Math.floor((distance % (1000 * 60)) / 1000);
-    let randomVal = blockedVal > 0 ? blockedVal : getRandomInt(2);
-    console.log(randomVal);
-    switch(randomVal){
+    let outputBrute = `Les mariages auront lieu dans ${days} jours, ${hours} heures, ${minutes} minutes, et ${seconds} secondes.`;
+
+    let randomVal = blockedVal ? blockedVal : getRandomInt(6);
+    switch (randomVal) {
         case 0:
-            return ('```ini' + '\n[Les mariages auront lieu dans ' + days + ' jours, ' + hours + ' heures, ' + minutes + ' minutes, et ' + seconds + 'secondes.]\n```');
+            return ('```ini' + '\n[' + outputBrute + ']\n```');
         case 1:
-            return ('```diff' + '\n- Les mariages auront lieu dans ' + days + ' jours, ' + hours + ' heures, ' + minutes + ' minutes, et ' + seconds + 'secondes.\n```');
+            return ('```diff' + '\n- ' + outputBrute + '\n```');
+        case 2:
+            return ('```css' + '\n[' + outputBrute + ']\n```');
+        case 3:
+            return ('```fix' + '\n' + outputBrute + '\n```');
+        case 4:
+            return ('```css' + '\n"' + outputBrute + '"\n```');
+        case 5:
+            return ('```bash' + '\n"' + outputBrute + '"\n```');
         default:
-            return ('```diff' + '\n- Les mariages auront lieu dans ' + days + ' jours, ' + hours + ' heures, ' + minutes + ' minutes, et ' + seconds + 'secondes.\n```');
+            return ('```diff' + '\n- ' + outputBrute + '\n```');
     }
 }
 
@@ -42,10 +51,9 @@ bot.on('ready', () => {
 
 bot.on('message', message => {
     if (message.content === '!countdown') {
-        if(message.author.username === 'Blue'){
+        if (message.author.username === 'Blue') {
             message.channel.send(getCountdownAsString(0));
-        }
-        else{
+        } else {
             message.channel.send(getCountdownAsString());
         }
     }
