@@ -7,7 +7,12 @@ const bot = new Discord.Client();
 
 const {Client} = require('pg');
 const client = new Client();
-client.connect();
+client.connect({
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: false
+    }
+});
 
 
 const TOKEN = process.env.TOKEN;
