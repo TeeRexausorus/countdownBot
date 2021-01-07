@@ -4,6 +4,7 @@ const Discord = require('discord.js');
 const fs = require('fs');
 const bot = new Discord.Client();
 
+const reducer = (accumulator, currentValue) => accumulator + currentValue;
 
 const {Client} = require('pg');
 const client = new Client({
@@ -16,11 +17,18 @@ client.connect();
 
 
 const TOKEN = process.env.TOKEN;
-const filename = 'countUp';
 const countDownDate = new Date("Mar 20, 2021 12:00:00").getTime();
 
-function getRandomInt(max) {
+exports.getRandomInt = function (max) {
     return Math.floor(Math.random() * Math.floor(max));
+}
+
+exports.roll = function (nbDice, dice) {
+    let arrayDices = [];
+    for (i = 0; i < nbDice; ++i){
+        arrayDices.push(this.getRandomInt(dice) + 1);
+    }
+    return arrayDices;
 }
 
 function getCountdownAsString(blockedVal) {
@@ -84,10 +92,31 @@ bot.on('message', message => {
                 .then(res => {
                     valObject = res.rows[0];
                     nbCountup = valObject[res.fields[0].name];
-                        message.channel.send(nbCountup > 0 ? `Remouk a reçu ${nbCountup} 🖕` : `Remouk a reçu ${nbCountup} 🖕, trop nul !`);
+                    message.channel.send(nbCountup > 0 ? `Remouk a reçu ${nbCountup} 🖕` : `Remouk a reçu ${nbCountup} 🖕, trop nul !`);
                 })
                 .catch(e => console.error(e.stack));
         }
     }
 });
 
+const regex = /!roll ([1-9][0-9]*)(d|D)([1-9][0-9]*)/gm;
+bot.on('message', message => {
+    if (message.content.includes('!roll')) {
+        let m;
+
+        while ((m = regex.exec(message.content)) !== null) {
+            // This is necessary to avoid infinite loops with zero-width matches
+            if (m.index === regex.lastIndex) {
+                regex.lastIndex++;
+            }
+
+            // The result can be accessed through the `m`-variable.
+            if(m.length === 4){
+                diceResult = this.roll(m[1], m[3]);
+                diceSum = diceResult.reduce(reducer);
+                strOut = `${diceSum} (${diceResult})`;
+                message.channel.send(strOut);
+            }
+        }
+    }
+});
