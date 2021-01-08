@@ -31,7 +31,7 @@ exports.roll = function (nbDice, dice) {
     return arrayDices;
 }
 
-function getCountdownAsString(blockedVal) {
+exports.getCountdownAsString = function(blockedVal) {
     // Get today's date and time
     let now = new Date().getTime() + (1000 * 60 * 60);
 
@@ -44,7 +44,7 @@ function getCountdownAsString(blockedVal) {
     let seconds = Math.floor((distance % (1000 * 60)) / 1000);
     let outputBrute = `Les mariages auront lieu dans ${days} jours, ${hours} heures, ${minutes} minutes, et ${seconds} secondes.`;
 
-    let randomVal = blockedVal >= 0 ? blockedVal : getRandomInt(6);
+    let randomVal = blockedVal >= 0 ? blockedVal : this.getRandomInt(6);
     switch (randomVal) {
         case 0:
             return ('```ini' + '\n[' + outputBrute + ']\n```');
@@ -72,9 +72,9 @@ bot.on('ready', () => {
 bot.on('message', message => {
     if (message.content === '!countdown') {
         if (message.author.username === 'Blue') {
-            message.channel.send(getCountdownAsString(0));
+            message.channel.send(this.getCountdownAsString(0));
         } else {
-            message.channel.send(getCountdownAsString());
+            message.channel.send(this.getCountdownAsString());
         }
     }
     if (message.content === '!countup') {
