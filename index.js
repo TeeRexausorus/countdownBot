@@ -87,20 +87,17 @@ bot.on('message', message => {
             });
             message.channel.send('🖕');
         } else {
-            client
+            message.channel.send('🌻');
+            /*client
                 .query('SELECT COUNT(date) as nbDate FROM countup')
                 .then(res => {
                     valObject = res.rows[0];
                     nbCountup = valObject[res.fields[0].name];
                     message.channel.send(nbCountup > 0 ? `Remouk a reçu ${nbCountup} 🖕` : `Remouk a reçu ${nbCountup} 🖕, trop nul !`);
                 })
-                .catch(e => console.error(e.stack));
+                .catch(e => console.error(e.stack));//*/
         }
     }
-});
-
-const regex = /!roll ([1-9][0-9]*)(d|D)([1-9][0-9]*)/gm;
-bot.on('message', message => {
     if (message.content.includes('!roll')) {
         let m;
 
@@ -120,3 +117,6 @@ bot.on('message', message => {
         }
     }
 });
+
+const regex = /!roll ([1-9][0-9]*)(d|D)([1-9][0-9]*)/gm;
+
