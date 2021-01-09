@@ -1,26 +1,51 @@
 //init pour Discord
 require('dotenv').config();
 const Discord = require('discord.js');
-const fs = require('fs');
-const bot = new Discord.Client();
-
-
 const {Client} = require('pg');
+
+const bot = new Discord.Client();
+const reducer = (accumulator, currentValue) => accumulator + currentValue;
 const client = new Client({
     connectionString: process.env.DATABASE_URL,
-    ssl: {
-        rejectUnauthorized: false
-    }
 });
-client.connect();
-
-
 const TOKEN = process.env.TOKEN;
-const filename = 'countUp';
 const countDownDate = new Date("Mar 20, 2021 12:00:00").getTime();
+const regexRoll = /!roll ([1-9][0-9]*)(d|D)([1-9][0-9]*)/gm;
+const regexCountupAdd = /!countup add (.*)/gm;
+
+bot.login(TOKEN);
+
+client
+    .connect()
+    .then(() => console.log('connected'))
+    .catch(err => console.error('connection error', err.stack));
 
 function getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max));
+}
+
+function roll(nbDice, dice) {
+    let arrayDices = [];
+    for (let i = 0; i < nbDice; ++i) {
+        arrayDices.push(getRandomInt(dice) + 1);
+    }
+    return arrayDices;
+}
+
+
+function countdown(message) {
+    if (message.author.username === 'Blue') {
+        message.channel.send(getCountdownAsString(0));
+    } else {
+        message.channel.send(getCountdownAsString());
+    }
+}
+
+function countup(message) {
+    const username = message.author.username;
+    client.query('SELECT username, emoji FROM userEmoji WHERE username LIKE $1;', [username], (err, res) => {
+        message.channel.send(res.rows.length > 0 ? res.rows[0].emoji : '🌻');
+    });
 }
 
 function getCountdownAsString(blockedVal) {
@@ -55,38 +80,69 @@ function getCountdownAsString(blockedVal) {
     }
 }
 
-bot.login(TOKEN);
 
 bot.on('ready', () => {
     console.info(`Logged in as ${bot.user.tag}!`);
 });
 
+function insertCountup(username, emoji, message) {
+    const insert = 'INSERT INTO userEmoji(username, emoji) VALUES($1, $2) ' +
+        'ON CONFLICT (username) ' +
+        'DO UPDATE SET emoji=EXCLUDED.emoji RETURNING *';
+    client.query(insert, [username, emoji])
+        .then(res => {
+            // console.log(res);
+            message.channel.send(`'${emoji}' défini pour ${username} 😀`)
+        });
+}
+
 bot.on('message', message => {
-    if (message.content === '!countdown') {
-        if (message.author.username === 'Blue') {
-            message.channel.send(getCountdownAsString(0));
-        } else {
-            message.channel.send(getCountdownAsString());
+
+    if (message.content.includes('!countdown')) {
+        countdown(message);
+    }
+    if (message.content.startsWith('!countup')) {
+        let m;
+        if (message.content.endsWith('!countup')) {
+            countup(message);
+        }
+        if (message.content.includes('add')) {
+            // This is necessary to avoid infinite loops with zero-width matches
+            while ((m = regexCountupAdd.exec(message.content)) !== null) {
+                if (m.index === regexCountupAdd.lastIndex) {
+                    regexCountupAdd.lastIndex++;
+                }
+
+                // The result can be accessed through the `m`-variable.
+                console.log(m.length);
+                if (m.length === 2) {
+                    console.log(message.author.username);
+                    console.log(m[1]);
+                    insertCountup(message.author.username, m[1], message);
+                }
+            }
+        }
+        if (message.content === '!countup help') {
+            message.channel.send('Use `!countup` to receive a beautiful Emoji.\n' +
+                'Use `!countup add *emoji*` (for instance `!countup add 🥰` ) to register your favorite emoji 😀. You can change it by reusing this command.');
         }
     }
-    if (message.content === '!countup') {
-        if (message.author.username === 'Remouk') {
-            const insertContupDate = 'INSERT INTO countup(date) VALUES(current_timestamp)';
-            client.query(insertContupDate, (err) => {
-                if (err) {
-                    console.log(err.stack)
-                }
-            });
-            message.channel.send('🖕');
-        } else {
-            client
-                .query('SELECT COUNT(date) as nbDate FROM countup')
-                .then(res => {
-                    valObject = res.rows[0];
-                    nbCountup = valObject[res.fields[0].name];
-                        message.channel.send(nbCountup > 0 ? `Remouk a reçu ${nbCountup} 🖕` : `Remouk a reçu ${nbCountup} 🖕, trop nul !`);
-                })
-                .catch(e => console.error(e.stack));
+    if (message.content.includes('!roll')) {
+        let m;
+
+        while ((m = regexRoll.exec(message.content)) !== null) {
+            // This is necessary to avoid infinite loops with zero-width matches
+            if (m.index === regexRoll.lastIndex) {
+                regexRoll.lastIndex++;
+            }
+
+            // The result can be accessed through the `m`-variable.
+            if (m.length === 4) {
+                diceResult = roll(m[1], m[3]);
+                diceSum = diceResult.reduce(reducer);
+                strOut = `${diceSum} (${diceResult})`;
+                message.channel.send(strOut);
+            }
         }
     }
 });
