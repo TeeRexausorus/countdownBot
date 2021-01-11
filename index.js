@@ -13,7 +13,8 @@ const countDownDate = new Date("Mar 20, 2021 12:00:00").getTime();
 const regexRoll = /!roll ([1-9][0-9]*)(d|D)([1-9][0-9]*)/gm;
 const regexCountupAdd = /!countup add (.*)/gm;
 
-bot.login(TOKEN);
+bot.login(TOKEN).then(() => console.log('bot created'))
+    .catch(err => console.error('bot creation error', err.stack));
 
 client
     .connect()
@@ -43,6 +44,9 @@ function countdown(message) {
 
 function countup(message) {
     const username = message.author.username;
+    client.query('UPDATE userEmoji SET nbUse = nbUse + 1 WHERE username=$1;', [username], (err, res) => {
+
+    });
     client.query('SELECT username, emoji FROM userEmoji WHERE username LIKE $1;', [username], (err, res) => {
         message.channel.send(res.rows.length > 0 ? res.rows[0].emoji : '🌻');
     });
@@ -91,7 +95,6 @@ function insertCountup(username, emoji, message) {
         'DO UPDATE SET emoji=EXCLUDED.emoji RETURNING *';
     client.query(insert, [username, emoji])
         .then(res => {
-            // console.log(res);
             message.channel.send(`'${emoji}' défini pour ${username} 😀`)
         });
 }
@@ -114,10 +117,7 @@ bot.on('message', message => {
                 }
 
                 // The result can be accessed through the `m`-variable.
-                console.log(m.length);
                 if (m.length === 2) {
-                    console.log(message.author.username);
-                    console.log(m[1]);
                     insertCountup(message.author.username, m[1], message);
                 }
             }
@@ -146,4 +146,3 @@ bot.on('message', message => {
         }
     }
 });
-

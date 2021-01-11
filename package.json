@@ -14,6 +14,7 @@
   "devDependencies": {
     "discord.js": "^11.5.1",
     "dotenv": "^8.2.0",
+    "nodemon": "^2.0.7",
     "pg": "^8.5.1"
   }
 }
