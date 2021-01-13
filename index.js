@@ -44,12 +44,10 @@ function countdown(message) {
 
 function countup(message) {
     const username = message.author.username;
-    client.query('UPDATE userEmoji SET nbUse = nbUse + 1 WHERE username=$1;', [username], (err, res) => {
-
-    });
     client.query('SELECT username, emoji FROM userEmoji WHERE username LIKE $1;', [username], (err, res) => {
         message.channel.send(res.rows.length > 0 ? res.rows[0].emoji : '🌻');
     });
+    client.query('UPDATE userEmoji SET nbUse = nbUse + 1 WHERE username=$1;', [username]);
 }
 
 function getCountdownAsString(blockedVal) {
@@ -127,6 +125,7 @@ bot.on('message', message => {
                 'Use `!countup add *emoji*` (for instance `!countup add 🥰` ) to register your favorite emoji 😀. You can change it by reusing this command.');
         }
     }
+
     if (message.content.includes('!roll')) {
         let m;
 
@@ -140,7 +139,7 @@ bot.on('message', message => {
             if (m.length === 4) {
                 diceResult = roll(m[1], m[3]);
                 diceSum = diceResult.reduce(reducer);
-                strOut = `${diceSum} (${diceResult})`;
+                strOut = `${diceSum}` + (m[1] > 1 ? ` (${diceResult})` : ``);
                 message.channel.send(strOut);
             }
         }
