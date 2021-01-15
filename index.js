@@ -11,6 +11,7 @@ const client = new Client({
 const TOKEN = process.env.TOKEN;
 const countDownDate = new Date("Mar 20, 2021 12:00:00").getTime();
 const regexRoll = /!roll ([1-9][0-9]*)(d|D)([1-9][0-9]*)/gm;
+const regexFakeRoll = /!r•ll ([1-9][0-9]*)(d|D)([1-9][0-9]*)/gm;
 const regexCountupAdd = /!countup add (.*)/gm;
 
 bot.login(TOKEN).then(() => console.log('bot created'))
@@ -29,6 +30,14 @@ function roll(nbDice, dice) {
     let arrayDices = [];
     for (let i = 0; i < nbDice; ++i) {
         arrayDices.push(getRandomInt(dice) + 1);
+    }
+    return arrayDices;
+}
+
+function fakeroll(nbDice, dice) {
+    let arrayDices = [];
+    for (let i = 0; i < nbDice; ++i) {
+        arrayDices.push(parseInt(dice));
     }
     return arrayDices;
 }
@@ -138,6 +147,24 @@ bot.on('message', message => {
             // The result can be accessed through the `m`-variable.
             if (m.length === 4) {
                 diceResult = roll(m[1], m[3]);
+                diceSum = diceResult.reduce(reducer);
+                strOut = `${diceSum}` + (m[1] > 1 ? ` (${diceResult})` : ``);
+                message.channel.send(strOut);
+            }
+        }
+    }
+    if (message.content.includes('!r•ll')) {
+        let m;
+
+        while ((m = regexFakeRoll.exec(message.content)) !== null) {
+            // This is necessary to avoid infinite loops with zero-width matches
+            if (m.index === regexFakeRoll.lastIndex) {
+                regexFakeRoll.lastIndex++;
+            }
+
+            // The result can be accessed through the `m`-variable.
+            if (m.length === 4) {
+                diceResult = fakeroll(m[1], m[3]);
                 diceSum = diceResult.reduce(reducer);
                 strOut = `${diceSum}` + (m[1] > 1 ? ` (${diceResult})` : ``);
                 message.channel.send(strOut);
