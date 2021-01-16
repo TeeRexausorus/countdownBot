@@ -59,6 +59,23 @@ function countup(message) {
     client.query('UPDATE userEmoji SET nbUse = nbUse + 1 WHERE username=$1;', [username]);
 }
 
+function dec2bin(dec){
+    return (dec >>> 0).toString(2);
+}
+
+function countupCount(message) {
+    const username = message.author.username;
+    client.query('SELECT nbUse FROM userEmoji WHERE username LIKE $1;', [username], (err, res) => {
+        let strBin = dec2bin(res.rows[0].nbuse);
+        let strOut = '';
+        for(let i = 0; i < strBin.length; ++i ){
+            strOut += strBin[i] === '0' ? '👌' : '🖕';
+        }
+        message.channel.send(strOut);
+    });
+    client.query('UPDATE userEmoji SET nbUse = nbUse + 1 WHERE username=$1;', [username]);
+}
+
 function getCountdownAsString(blockedVal) {
     // Get today's date and time
     let now = new Date().getTime() + (1000 * 60 * 60);
@@ -114,7 +131,11 @@ bot.on('message', message => {
     if (message.content.startsWith('!countup')) {
         let m;
         if (message.content.endsWith('!countup')) {
-            countup(message);
+            if (message.author.username === 'Remouk') {
+                countupCount(message);
+            } else {
+                countup(message);
+            }
         }
         if (message.content.includes('add')) {
             // This is necessary to avoid infinite loops with zero-width matches
