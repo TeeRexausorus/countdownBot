@@ -9,7 +9,7 @@ const client = new Client({
     connectionString: process.env.DATABASE_URL,
 });
 const TOKEN = process.env.TOKEN;
-const countDownDate = new Date("Mar 20, 2021 12:00:00").getTime();
+const countDownDate = new Date("Mar 20, 2021 00:00:00").getTime();
 const regexRoll = /!roll ([1-9][0-9]*)(d|D)([1-9][0-9]*)/gm;
 const regexFakeRoll = /!r•ll ([1-9][0-9]*)(d|D)([1-9][0-9]*)/gm;
 const regexCountupAdd = /!countup add (.*)/gm;
