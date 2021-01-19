@@ -53,10 +53,10 @@ function countdown(message) {
 
 function countup(message) {
     const username = message.author.username;
-    client.query('SELECT username, emoji FROM userEmoji WHERE username LIKE $1;', [username], (err, res) => {
+    client.query('SELECT username, emoji FROM "userEmoji" WHERE username LIKE $1;', [username], (err, res) => {
         message.channel.send(res.rows.length > 0 ? res.rows[0].emoji : '🌻');
     });
-    client.query('UPDATE userEmoji SET nbUse = nbUse + 1 WHERE username=$1;', [username]);
+    client.query('UPDATE "userEmoji" SET "nbUse" = "nbUse" + 1 WHERE username=$1;', [username]);
 }
 
 function dec2bin(dec){
@@ -65,7 +65,7 @@ function dec2bin(dec){
 
 function countupCount(message) {
     const username = message.author.username;
-    client.query('SELECT nbUse FROM userEmoji WHERE username LIKE $1;', [username], (err, res) => {
+    client.query('SELECT "nbUse" FROM "userEmoji" WHERE username LIKE $1;', [username], (err, res) => {
         let strBin = dec2bin(res.rows[0].nbuse);
         let strOut = '';
         for(let i = 0; i < strBin.length; ++i ){
@@ -73,7 +73,7 @@ function countupCount(message) {
         }
         message.channel.send(strOut);
     });
-    client.query('UPDATE userEmoji SET nbUse = nbUse + 1 WHERE username=$1;', [username]);
+    client.query('UPDATE "userEmoji" SET "nbUse" = "nbUse" + 1 WHERE username=$1;', [username]);
 }
 
 function getCountdownAsString(blockedVal) {
@@ -114,7 +114,7 @@ bot.on('ready', () => {
 });
 
 function insertCountup(username, emoji, message) {
-    const insert = 'INSERT INTO userEmoji(username, emoji) VALUES($1, $2) ' +
+    const insert = 'INSERT INTO "userEmoji"(username, emoji) VALUES($1, $2) ' +
         'ON CONFLICT (username) ' +
         'DO UPDATE SET emoji=EXCLUDED.emoji RETURNING *';
     client.query(insert, [username, emoji])

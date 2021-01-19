@@ -4,11 +4,13 @@
   "description": "countdown bot",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "migrate": "node-pg-migrate"
   },
   "dependencies": {
     "discord.js": "^11.5.1",
     "dotenv": "^8.2.0",
+    "node-pg-migrate": "^5.9.0",
     "pg": "^8.5.1"
   },
   "devDependencies": {
