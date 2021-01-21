@@ -113,18 +113,7 @@ function getCountdownAsString(blockedVal) {
     }
 }
 function getSlapCountdownAsString(blockedVal) {
-    // Get today's date and time
-    let now = new Date().getTime() + (1000 * 60 * 60);
-
-    // Find the distance between now and the countdown date
-    let distance = slapCountDownDate - now;
-    let calcDistance = distance > 0 ? distance : -distance;
-    console.log(calcDistance);
-    let hours = Math.floor((calcDistance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    let minutes = Math.floor((calcDistance % (1000 * 60 * 60)) / (1000 * 60));
-    let seconds = Math.floor((calcDistance % (1000 * 60)) / 1000);
-    let outputBrute = distance > 0 ? `Slap fait son annonce dans ${hours} heure(s), ${minutes} minute(s), et ${seconds} seconde(s).`
-    : `Slap et Blue sont en retard de ${hours} heure(s), ${minutes} minute(s), et ${seconds} seconde(s).`;
+    let outputBrute = `on aura attendu Slap et Blue pendant 0 heure(s), 40 minute(s), et 42 seconde(s).`;
 
     let randomVal = blockedVal >= 0 ? blockedVal : getRandomInt(6);
     switch (randomVal) {
