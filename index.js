@@ -122,7 +122,8 @@ function getSlapCountdownAsString(blockedVal) {
     let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     let seconds = Math.floor((distance % (1000 * 60)) / 1000);
-    let outputBrute = `Slap fait son annonce dans ${hours} heure(s), ${minutes} minute(s), et ${seconds} seconde(s).`;
+    let outputBrute = distance > 0 ? `Slap fait son annonce dans ${hours} heure(s), ${minutes} minute(s), et ${seconds} seconde(s).`
+    : `Slap a fait son annonce il y a ${-hours} heure(s), ${-minutes} minute(s), et ${-seconds} seconde(s).`;
 
     let randomVal = blockedVal >= 0 ? blockedVal : getRandomInt(6);
     switch (randomVal) {
