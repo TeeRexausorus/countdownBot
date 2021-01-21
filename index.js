@@ -10,6 +10,8 @@ const client = new Client({
 });
 const TOKEN = process.env.TOKEN;
 const countDownDate = new Date("Mar 20, 2021 00:00:00").getTime();
+const slapCountDownDate = new Date("Jan 21, 2021 23:00:00").getTime();
+console.log(slapCountDownDate);
 const regexRoll = /!roll ([1-9][0-9]*)(d|D)([1-9][0-9]*)/gm;
 const regexFakeRoll = /!r•ll ([1-9][0-9]*)(d|D)([1-9][0-9]*)/gm;
 const regexCountupAdd = /!countup add (.*)/gm;
@@ -49,6 +51,10 @@ function countdown(message) {
     } else {
         message.channel.send(getCountdownAsString());
     }
+}
+
+function slap(message) {
+        message.channel.send(getSlapCountdownAsString());
 }
 
 function countup(message) {
@@ -107,6 +113,36 @@ function getCountdownAsString(blockedVal) {
             return ('```diff' + '\n- ' + outputBrute + '\n```');
     }
 }
+function getSlapCountdownAsString(blockedVal) {
+    // Get today's date and time
+    let now = new Date().getTime() + (1000 * 60 * 60);
+
+    // Find the distance between now and the countdown date
+    let distance = slapCountDownDate - now;
+
+    let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    let outputBrute = `Slap fait son annonce dans ${hours} heure(s), ${minutes} minute(s), et ${seconds} seconde(s).`;
+
+    let randomVal = blockedVal >= 0 ? blockedVal : getRandomInt(6);
+    switch (randomVal) {
+        case 0:
+            return ('```ini' + '\n[' + outputBrute + ']\n```');
+        case 1:
+            return ('```diff' + '\n- ' + outputBrute + '\n```');
+        case 2:
+            return ('```css' + '\n[' + outputBrute + ']\n```');
+        case 3:
+            return ('```fix' + '\n' + outputBrute + '\n```');
+        case 4:
+            return ('```css' + '\n"' + outputBrute + '"\n```');
+        case 5:
+            return ('```bash' + '\n"' + outputBrute + '"\n```');
+        default:
+            return ('```diff' + '\n- ' + outputBrute + '\n```');
+    }
+}
 
 
 bot.on('ready', () => {
@@ -127,6 +163,9 @@ bot.on('message', message => {
 
     if (message.content.includes('!countdown')) {
         countdown(message);
+    }
+    if (message.content.includes('!slap')) {
+        slap(message);
     }
     if (message.content.startsWith('!countup')) {
         let m;
