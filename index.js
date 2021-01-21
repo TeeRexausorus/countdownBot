@@ -10,7 +10,7 @@ const client = new Client({
 });
 const TOKEN = process.env.TOKEN;
 const countDownDate = new Date("Mar 20, 2021 00:00:00").getTime();
-const slapCountDownDate = new Date("Jan 21, 2021 23:00:00").getTime();
+const slapCountDownDate = new Date("Jan 21, 2021 22:00:00").getTime();
 const regexRoll = /!roll ([1-9][0-9]*)(d|D)([1-9][0-9]*)/gm;
 const regexFakeRoll = /!r•ll ([1-9][0-9]*)(d|D)([1-9][0-9]*)/gm;
 const regexCountupAdd = /!countup add (.*)/gm;
