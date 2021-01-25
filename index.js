@@ -10,7 +10,6 @@ const client = new Client({
 });
 const TOKEN = process.env.TOKEN;
 const countDownDate = new Date("Mar 20, 2021 00:00:00").getTime();
-const slapCountDownDate = new Date("Jan 21, 2021 22:00:00").getTime();
 const regexRoll = /!roll ([1-9][0-9]*)(d|D)([1-9][0-9]*)/gm;
 const regexFakeRoll = /!r•ll ([1-9][0-9]*)(d|D)([1-9][0-9]*)/gm;
 const regexCountupAdd = /!countup add (.*)/gm;
@@ -54,6 +53,10 @@ function countdown(message) {
 
 function slap(message) {
     message.channel.send(getSlapCountdownAsString());
+}
+
+function love(message) {
+    message.channel.send('💜❤️🧡💛💚💙🤎🤍❣️💕💞💓💖💘💝');
 }
 
 function countup(message) {
@@ -153,6 +156,9 @@ bot.on('message', message => {
 
     if (message.content.includes('!countdown')) {
         countdown(message);
+    }
+    if (message.content.includes('!love')) {
+        love(message);
     }
     if (message.content.includes('!slap')) {
         slap(message);
