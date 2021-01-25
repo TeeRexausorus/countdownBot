@@ -56,7 +56,7 @@ function slap(message) {
 }
 
 function love(message) {
-    message.channel.send('❤️🧡💛💚💙💜');
+    message.channel.send(`/❤️/♪·* ~🧡~ '♪ /💛/ ♪·* ~💚 ~ '♪ /💙/ ♪·* ~💜~`);
 }
 
 function countup(message) {
