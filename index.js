@@ -59,6 +59,11 @@ function love(message) {
     message.channel.send(`/❤️/♪·* ~🧡~ '♪ /💛/ ♪·* ~💚 ~ '♪ /💙/ ♪·* ~💜~`);
 }
 
+function hate(message) {
+    message.channel.send('There is no hate here. Take some love:');
+    message.channel.send(`/❤️/♪·* ~🧡~ '♪ /💛/ ♪·* ~💚 ~ '♪ /💙/ ♪·* ~💜~`);
+}
+
 function countup(message) {
     const username = message.author.username;
     client.query('SELECT username, emoji FROM userEmoji WHERE username LIKE $1;', [username], (err, res) => {
@@ -159,6 +164,9 @@ bot.on('message', message => {
     }
     if (message.content.includes('!love')) {
         love(message);
+    }
+    if (message.content.includes('!hate')) {
+        hate(message);
     }
     if (message.content.includes('!slap')) {
         slap(message);
