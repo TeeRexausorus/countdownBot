@@ -60,11 +60,12 @@ function love(message) {
 }
 
 function hate(message) {
-    message.channel.send('There is no hate here. Take some love:');
+    message.channel.send('There is no hate here. Take some love instead:');
     message.channel.send(`/❤️/♪·* ~🧡~ '♪ /💛/ ♪·* ~💚 ~ '♪ /💙/ ♪·* ~💜~`);
 }
 
 function countup(message) {
+    console.log('coucou');
     const username = message.author.username;
     client.query('SELECT username, emoji FROM userEmoji WHERE username LIKE $1;', [username], (err, res) => {
         message.channel.send(res.rows.length > 0 ? res.rows[0].emoji : '🌻');
@@ -72,7 +73,7 @@ function countup(message) {
     client.query('UPDATE userEmoji SET nbUse = nbUse + 1 WHERE username=$1;', [username]);
 }
 
-function dec2bin(dec){
+function dec2bin(dec) {
     return (dec >>> 0).toString(2);
 }
 
@@ -81,7 +82,7 @@ function countupCount(message) {
     client.query('SELECT nbUse FROM userEmoji WHERE username LIKE $1;', [username], (err, res) => {
         let strBin = dec2bin(res.rows[0].nbuse);
         let strOut = '';
-        for(let i = 0; i < strBin.length; ++i ){
+        for (let i = 0; i < strBin.length; ++i) {
             strOut += strBin[i] === '0' ? '👌' : '🖕';
         }
         message.channel.send(strOut);
@@ -120,6 +121,7 @@ function getCountdownAsString(blockedVal) {
             return ('```diff' + '\n- ' + outputBrute + '\n```');
     }
 }
+
 function getSlapCountdownAsString(blockedVal) {
     let outputBrute = `on aura attendu Slap et Blue pendant 0 heure(s), 40 minute(s), et 42 seconde(s).`;
 
@@ -171,15 +173,8 @@ bot.on('message', message => {
     if (message.content.includes('!slap')) {
         slap(message);
     }
-    if (message.content.startsWith('!countup')) {
+    if (message.content.includes('!countup')) {
         let m;
-        if (message.content.endsWith('!countup')) {
-            if (message.author.username === 'Remouk') {
-                countupCount(message);
-            } else {
-                countup(message);
-            }
-        }
         if (message.content.includes('add')) {
             // This is necessary to avoid infinite loops with zero-width matches
             while ((m = regexCountupAdd.exec(message.content)) !== null) {
@@ -192,10 +187,15 @@ bot.on('message', message => {
                     insertCountup(message.author.username, m[1], message);
                 }
             }
-        }
-        if (message.content === '!countup help') {
+        } else if (message.content === '!countup help') {
             message.channel.send('Use `!countup` to receive a beautiful Emoji.\n' +
                 'Use `!countup add *emoji*` (for instance `!countup add 🥰` ) to register your favorite emoji 😀. You can change it by reusing this command.');
+        } else {
+            if (message.author.username === 'Remouk') {
+                countupCount(message);
+            } else {
+                countup(message);
+            }
         }
     }
 
