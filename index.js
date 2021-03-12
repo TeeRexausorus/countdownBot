@@ -65,7 +65,6 @@ function hate(message) {
 }
 
 function countup(message) {
-    console.log('coucou');
     const username = message.author.username;
     client.query('SELECT username, emoji FROM userEmoji WHERE username LIKE $1;', [username], (err, res) => {
         message.channel.send(res.rows.length > 0 ? res.rows[0].emoji : '🌻');
@@ -175,7 +174,7 @@ bot.on('message', message => {
     }
     if (message.content.includes('!countup')) {
         let m;
-        if (message.content.includes('add')) {
+        if (message.content.includes('add') && !bot.user.tag.includes(message.author.username)) {
             // This is necessary to avoid infinite loops with zero-width matches
             while ((m = regexCountupAdd.exec(message.content)) !== null) {
                 if (m.index === regexCountupAdd.lastIndex) {
