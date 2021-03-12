@@ -174,7 +174,7 @@ bot.on('message', message => {
     }
     if (message.content.includes('!countup')) {
         let m;
-        if (message.content.includes('add') && !bot.user.tag.includes(message.author.username)) {
+        if (message.content.includes('add') && !message.author.bot) {
             // This is necessary to avoid infinite loops with zero-width matches
             while ((m = regexCountupAdd.exec(message.content)) !== null) {
                 if (m.index === regexCountupAdd.lastIndex) {
