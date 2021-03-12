@@ -174,6 +174,7 @@ bot.on('message', message => {
     }
     if (message.content.includes('!countup')) {
         let m;
+        console.log(message.author.bot);
         if (message.content.includes('add') && !message.author.bot) {
             // This is necessary to avoid infinite loops with zero-width matches
             while ((m = regexCountupAdd.exec(message.content)) !== null) {
