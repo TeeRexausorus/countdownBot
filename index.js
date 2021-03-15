@@ -235,4 +235,8 @@ bot.on('message', message => {
             }
         }
     }
+
+    if (message.content.includes('!hug')) {
+        message.channel.send('', {files: ['https://i.imgur.com/sCshJhG.gif']})
+    }
 });
