@@ -7,6 +7,7 @@ const bot = new Discord.Client();
 const reducer = (accumulator, currentValue) => accumulator + currentValue;
 const client = new Client({
     connectionString: process.env.DATABASE_URL,
+    ssl: true,
 });
 const TOKEN = process.env.TOKEN;
 const countDownDate = new Date("Mar 20, 2021 00:00:00").getTime();
