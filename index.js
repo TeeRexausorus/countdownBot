@@ -96,12 +96,13 @@ function getCountdownAsString(blockedVal) {
 
     // Find the distance between now and the countdown date
     let distance = countDownDate - now;
-
-    let days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    let seconds = Math.floor((distance % (1000 * 60)) / 1000);
-    let outputBrute = `Les mariages auront lieu dans ${days} jours, ${hours} heures, ${minutes} minutes, et ${seconds} secondes.`;
+    let distanceCalc = distance > 0 ? distance : -distance;
+    let days = Math.floor(distanceCalc / (1000 * 60 * 60 * 24));
+    let hours = Math.floor((distanceCalc % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    let minutes = Math.floor((distanceCalc % (1000 * 60 * 60)) / (1000 * 60));
+    let seconds = Math.floor((distanceCalc % (1000 * 60)) / 1000);
+    let outputBrute = distance > 0 ? `Les mariages auront lieu dans ${days} jours, ${hours} heures, ${minutes} minutes, et ${seconds} secondes.` :
+        `Les mariages ont eu lieu il y a ${days} jours, ${hours} heures, ${minutes} minutes, et ${seconds} secondes.`;
 
     let randomVal = blockedVal >= 0 ? blockedVal : getRandomInt(6);
     switch (randomVal) {
