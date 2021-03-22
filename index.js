@@ -238,6 +238,17 @@ bot.on('message', message => {
     }
 
     if (message.content.includes('!hug')) {
-        message.channel.send('', {files: ['https://i.imgur.com/sCshJhG.gif']})
+        let randomVal = getRandomInt(2);
+        switch(randomVal){
+            case 0:
+                message.channel.send('', {files: ['https://i.imgur.com/sCshJhG.gif']});
+                break;
+            case 1:
+                message.channel.send('', {files: ['https://64.media.tumblr.com/214e81bf7bb78244b831e4807caf7809/tumblr_nijak1x5tu1u0fwxho1_1280.gif']});
+                break;
+            default:
+                message.channel.send('', {files: ['https://i.imgur.com/sCshJhG.gif']});
+
+        }
     }
 });
