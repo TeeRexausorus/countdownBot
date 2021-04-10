@@ -250,7 +250,7 @@ bot.on('message', message => {
                 message.channel.send('', {files: ['https://media.giphy.com/media/yidUzriaAGJbsxt58k/giphy.gif']});
                 break;
             case 3:
-                message.channel.send('', {files: ['https://tenor.com/view/hug-love-hi-bye-cat-gif-15999080']});
+                message.channel.send('', {files: ['https://media1.tenor.com/images/dd1b8fe694d7bfba2ae87e1ede030244/tenor.gif']});
                 break;
             default:
                 message.channel.send('', {files: ['https://i.imgur.com/sCshJhG.gif']});
