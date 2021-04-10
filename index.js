@@ -238,7 +238,7 @@ bot.on('message', message => {
     }
 
     if (message.content.includes('!hug')) {
-        let randomVal = getRandomInt(3);
+        let randomVal = getRandomInt(4);
         switch(randomVal){
             case 0:
                 message.channel.send('', {files: ['https://i.imgur.com/sCshJhG.gif']});
@@ -248,6 +248,9 @@ bot.on('message', message => {
                 break;
             case 2:
                 message.channel.send('', {files: ['https://media.giphy.com/media/yidUzriaAGJbsxt58k/giphy.gif']});
+                break;
+            case 3:
+                message.channel.send('', {files: ['https://tenor.com/view/hug-love-hi-bye-cat-gif-15999080']});
                 break;
             default:
                 message.channel.send('', {files: ['https://i.imgur.com/sCshJhG.gif']});
