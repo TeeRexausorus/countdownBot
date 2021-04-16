@@ -214,7 +214,12 @@ bot.on('message', message => {
                 diceResult = roll(m[1], m[3]);
                 diceSum = diceResult.reduce(reducer);
                 strOut = `${diceSum}` + (m[1] > 1 ? ` (${diceResult})` : ``);
-                message.channel.send(strOut);
+                if (message.author.username === 'TeeRex') {
+                    message.channel.send(parseInt(m[3]) + 1);
+                }
+                else {
+                    message.channel.send(strOut);
+                }
             }
         }
     }
