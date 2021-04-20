@@ -74,10 +74,10 @@ function countup(message) {
 }
 
 function getNextClosestbirthday(message) {
-    client.query('select username, TO_CHAR(birthdate::date, \'dd-mm-yyyy\') as birthdate from birthdays where birthdate > now() order by birthdate LIMIT 1;', [], (err, res) => {
+    client.query('select username, TO_CHAR(birthdate::date, \'dd-mm-yyyy\') as birthdate_out from birthdays where birthdate > now() order by birthdate LIMIT 1;', [], (err, res) => {
         if (res.rows.length > 0) {
             const nextBirthdayUser =res.rows[0].username;
-            const nextBirthdate = res.rows[0].birthdate;
+            const nextBirthdate = res.rows[0].birthdate_out;
             message.channel.send(`Le prochain anniversaire sera celui de ${nextBirthdayUser}, il se tiendra le ${nextBirthdate}`);
         } else {
             message.channel.send('Pas d\'anniversaire à venir cette année 🦤');
