@@ -73,6 +73,18 @@ function countup(message) {
     client.query('UPDATE userEmoji SET nbUse = nbUse + 1 WHERE username=$1;', [username]);
 }
 
+function getNextClosestbirthday(message) {
+    client.query('select username, TO_CHAR(birthdate::date, \'dd-mm-yyyy\') as birthdate from birthdays where birthdate > now() order by birthdate LIMIT 1;', [], (err, res) => {
+        if (res.rows.length > 0) {
+            const nextBirthdayUser =res.rows[0].username;
+            const nextBirthdate = res.rows[0].birthdate;
+            message.channel.send(`Le prochain anniversaire sera celui de ${nextBirthdayUser}, il se tiendra le ${nextBirthdate}`);
+        } else {
+            message.channel.send('Pas d\'anniversaire à venir cette année 🦤');
+        }
+    });
+}
+
 function dec2bin(dec) {
     return (dec >>> 0).toString(2);
 }
@@ -165,15 +177,19 @@ bot.on('message', message => {
     if (message.content.includes('!countdown')) {
         countdown(message);
     }
+
     if (message.content.includes('!love')) {
         love(message);
     }
+
     if (message.content.includes('!hate')) {
         hate(message);
     }
+
     if (message.content.includes('!slap')) {
         slap(message);
     }
+
     if (message.content.includes('!countup')) {
         let m;
         if (message.content.includes('add')) {
@@ -223,6 +239,7 @@ bot.on('message', message => {
             }
         }
     }
+
     if (message.content.includes('!r•ll')) {
         let m;
 
@@ -240,6 +257,10 @@ bot.on('message', message => {
                 message.channel.send(strOut);
             }
         }
+    }
+
+    if (message.content.includes('!birthday') || message.content.includes('!bd')) {
+        getNextClosestbirthday(message);
     }
 
     if (message.content.includes('!hug')) {
