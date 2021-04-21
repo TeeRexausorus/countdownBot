@@ -283,4 +283,9 @@ bot.on('message', message => {
 
         }
     }
+
+    if (message.content.includes('!raft')) {
+        message.channel.send('SOON MAY...', {files: ['assets/soonmay.mp3']})
+    }
+
 });
