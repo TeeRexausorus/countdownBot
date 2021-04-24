@@ -81,11 +81,11 @@ function interjection() {
         case 1:
             return ('Wahou !');
         case 2:
-            return ('C\'est zinzin');
+            return ('C\'est zinzin !');
         case 3:
-            return ('Trop chouette');
+            return ('Trop chouette !');
         case 4:
-            return ('C\'est la fête');
+            return ('C\'est la fête !');
         default:
             return ('');
     }
