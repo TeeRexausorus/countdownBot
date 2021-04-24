@@ -74,12 +74,18 @@ function countup(message) {
 }
 
 function interjection() {
-    let randomVal = getRandomInt(3);
+    let randomVal = getRandomInt(6);
     switch (randomVal) {
         case 0:
             return ('C\'est énorme !');
         case 1:
             return ('Wahou !');
+        case 2:
+            return ('C\'est zinzin');
+        case 3:
+            return ('Trop chouette');
+        case 4:
+            return ('C\'est la fête');
         default:
             return ('');
     }
