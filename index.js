@@ -73,16 +73,41 @@ function countup(message) {
     client.query('UPDATE userEmoji SET nbUse = nbUse + 1 WHERE username=$1;', [username]);
 }
 
+function interjection() {
+    let randomVal = getRandomInt(3);
+    switch (randomVal) {
+        case 0:
+            return ('C\'est énorme !');
+        case 1:
+            return ('Wahou !');
+        default:
+            return ('');
+    }
+}
+
 function getNextClosestbirthday(message) {
-    client.query('select username, TO_CHAR(birthdate::date, \'dd-mm-yyyy\') as birthdate_out from birthdays where birthdate > now() order by birthdate LIMIT 1;', [], (err, res) => {
-        if (res.rows.length > 0) {
-            const nextBirthdayUser =res.rows[0].username;
-            const nextBirthdate = res.rows[0].birthdate_out;
-            message.channel.send(`Le prochain anniversaire sera celui de ${nextBirthdayUser}, il se tiendra le ${nextBirthdate}`);
-        } else {
-            message.channel.send('Pas d\'anniversaire à venir cette année 🦤');
-        }
-    });
+    const monthNames = ["Janvier", "Février", "Mar", "Avril", "Mai", "Juin",
+        "Juillet", "Aout", "Septembre", "Octobre", "Novembre", "Decembre"
+    ];
+    client.query(
+        "select username, date_part('day', birthdate::date) as day_out, date_part('month', birthdate::date) as month_out, date_part('year', birthdate::date) as year, date_part('year', now()) - date_part('year', birthdate::date) as age" +
+        " FROM birthdays " +
+        "WHERE date_part('month', birthdate::date) > date_part('month', now()::date) " +
+        "OR date_part('month', birthdate::date) = date_part('month', now()::date) " +
+        "    AND date_part('day', birthdate::date) > date_part('day', now()::date)" +
+        " ORDER BY date_part('month', birthdate::date) " +
+        "LIMIT 1;", [], (err, res) => {
+            if (err) {
+                console.error(err);
+            } else if (res.rows.length > 0) {
+                const nextBirthdayUser = res.rows[0].username;
+                const nextBirthdate = `${res.rows[0].day_out == 1 ? res.rows[0].day_out + 'er' : res.rows[0].day_out} ${monthNames[res.rows[0].month_out - 1]}`;
+                const age = res.rows[0].age;
+                message.channel.send(`Le prochain anniversaire sera celui de ${nextBirthdayUser}, il se tiendra le ${nextBirthdate}. Ça lui fera ${age} ans ! ${interjection()}`);
+            } else {
+                message.channel.send('Pas d\'anniversaire à venir cette année 🦤');
+            }
+        });
 }
 
 function dec2bin(dec) {
@@ -232,8 +257,7 @@ bot.on('message', message => {
                 strOut = `${diceSum}` + (m[1] > 1 ? ` (${diceResult})` : ``);
                 if (message.author.username === 'TeeRex') {
                     message.channel.send(parseInt(m[3]) + 1);
-                }
-                else {
+                } else {
                     message.channel.send(strOut);
                 }
             }
@@ -265,7 +289,7 @@ bot.on('message', message => {
 
     if (message.content.includes('!hug')) {
         let randomVal = getRandomInt(4);
-        switch(randomVal){
+        switch (randomVal) {
             case 0:
                 message.channel.send('', {files: ['https://i.imgur.com/sCshJhG.gif']});
                 break;
