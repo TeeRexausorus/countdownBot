@@ -100,7 +100,7 @@ function getNextClosestbirthday(message) {
         " FROM birthdays " +
         "WHERE date_part('month', birthdate::date) > date_part('month', now()::date) " +
         "OR date_part('month', birthdate::date) = date_part('month', now()::date) " +
-        "    AND date_part('day', birthdate::date) > date_part('day', now()::date)" +
+        "    AND date_part('day', birthdate::date) >= date_part('day', now()::date)" +
         " ORDER BY date_part('month', birthdate::date) " +
         "LIMIT 1;", [], (err, res) => {
             if (err) {
