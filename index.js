@@ -96,12 +96,12 @@ function getNextClosestbirthday(message) {
         "Juillet", "Aout", "Septembre", "Octobre", "Novembre", "Decembre"
     ];
     client.query(
-        "select username, date_part('day', birthdate::date) as day_out, date_part('month', birthdate::date) as month_out, date_part('year', birthdate::date) as year, date_part('year', now()) - date_part('year', birthdate::date) as age" +
-        " FROM birthdays " +
+        "select username, date_part('day', birthdate::date) as day_out, date_part('month', birthdate::date) as month_out, date_part('year', birthdate::date) as year, date_part('year', now()) - date_part('year', birthdate::date) as age " +
+        "FROM birthdays " +
         "WHERE date_part('month', birthdate::date) > date_part('month', now()::date) " +
         "OR date_part('month', birthdate::date) = date_part('month', now()::date) " +
-        "    AND date_part('day', birthdate::date) >= date_part('day', now()::date)" +
-        " ORDER BY date_part('month', birthdate::date) " +
+        "AND date_part('day', birthdate::date) >= date_part('day', now()::date) " +
+        "ORDER BY date_part('month', birthdate::date) " +
         "LIMIT 1;", [], (err, res) => {
             if (err) {
                 console.error(err);
@@ -318,4 +318,68 @@ bot.on('message', message => {
         message.channel.send('SOON MAY...', {files: ['assets/soonmay.mp3']})
     }
 
+});
+
+
+const tmi = require('tmi.js');
+
+const twitchClient = new tmi.Client({
+    options: {debug: true},
+    connection: {reconnect: true},
+    identity: {
+        username: 'gentilrexbot',
+        password: process.env.TWITCH_API
+    },
+    channels: ['gentilrex', 'kickban42', 'gomarmonkey']
+});
+
+twitchClient.connect();
+
+twitchClient.on('message', (channel, tags, message, self) => {
+    // Ignore echoed messages and non-command messages.
+    if (self || !message.startsWith('!')) {
+        return;
+    }
+
+    function dices() {
+
+        let m;
+
+        while ((m = regexRoll.exec(message)) !== null) {
+            // This is necessary to avoid infinite loops with zero-width matches
+            if (m.index === regexRoll.lastIndex) {
+                regexRoll.lastIndex++;
+            }
+
+            // The result can be accessed through the `m`-variable.
+            if (m.length === 4) {
+                diceResult = roll(m[1], m[3]);
+                diceSum = diceResult.reduce(reducer);
+                strOut = `${diceSum}` + (m[1] > 1 ? ` (${diceResult})` : ``);
+                twitchClient.say(channel, `@${tags.username}, tu as fait ${strOut}`);
+            }
+
+        }
+    }
+
+    function hug() {
+                twitchClient.say(channel, `@${tags.username}, I'm just a bot but I care for you. Here, let me hug you !`);
+    }
+    if (channel.includes('gentilrex') || channel.includes('gomarmonkey')) {
+        const args = message.slice(1).split(' ');
+        const command = args.shift().toLowerCase();
+        if (command === 'roll') {
+            dices();
+        }
+        if (command === 'hug'){
+            hug()
+        }
+    }
+    if (channel.includes('kickban42')) {
+        const args = message.slice(1).split(' ');
+        const command = args.shift().toLowerCase();
+        if (command === 'kb') {
+            twitchClient.say(channel, `@${tags.username}, Kickban a : 621 followers sur twitter ! 2,90k abonnés sur Youtube ! 609 followers sur Instagram ! 253 membres sur Discord`);
+        }
+    }
 });
