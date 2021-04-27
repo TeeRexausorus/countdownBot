@@ -365,6 +365,21 @@ twitchClient.on('message', (channel, tags, message, self) => {
     function hug() {
                 twitchClient.say(channel, `@${tags.username}, I'm just a bot but I care for you. Here, let me hug you !`);
     }
+
+    function kickban() {
+        client.query('SELECT network, peasants, usernickname FROM kickban ORDER BY network;', [], (err, res) => {
+            const arrayOut = [];
+            console.log(res.rows.length);
+            for (let i = 0; i < res.rows.length; ++i) {
+                const { network, peasants, usernickname} = res.rows[i];
+                arrayOut.push(`${peasants} ${usernickname} sur ${network}`);
+            }
+            const strOut = arrayOut.join(' ! ');
+            console.log(`${strOut} ${arrayOut}`);
+            twitchClient.say(channel, `@${tags.username}, Kickban a : ${strOut}`);
+        });
+    }
+
     if (channel.includes('gentilrex') || channel.includes('gomarmonkey')) {
         const args = message.slice(1).split(' ');
         const command = args.shift().toLowerCase();
@@ -372,14 +387,16 @@ twitchClient.on('message', (channel, tags, message, self) => {
             dices();
         }
         if (command === 'hug'){
-            hug()
+            hug();
         }
     }
+
+
     if (channel.includes('kickban42')) {
         const args = message.slice(1).split(' ');
         const command = args.shift().toLowerCase();
         if (command === 'kb') {
-            twitchClient.say(channel, `@${tags.username}, Kickban a : 621 followers sur twitter ! 2,90k abonnés sur Youtube ! 609 followers sur Instagram ! 253 membres sur Discord`);
+            kickban();
         }
     }
 });
