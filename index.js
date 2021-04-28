@@ -1,3 +1,4 @@
+const mws = require('./mywebsocket');
 //init pour Discord
 require('dotenv').config();
 const Discord = require('discord.js');
@@ -330,7 +331,7 @@ const twitchClient = new tmi.Client({
         username: 'gentilrexbot',
         password: process.env.TWITCH_API
     },
-    channels: ['gentilrex', 'kickban42', 'gomarmonkey']
+    channels: ['gentilrex']
 });
 
 twitchClient.connect();
@@ -389,8 +390,13 @@ twitchClient.on('message', (channel, tags, message, self) => {
         if (command === 'hug'){
             hug();
         }
+        if (command === 'kb') {
+            kickban();
+        }
+        if(command === 'break') {
+            mws.notifyWebsocketClient('gentilrex');
+        }
     }
-
 
     if (channel.includes('kickban42')) {
         const args = message.slice(1).split(' ');

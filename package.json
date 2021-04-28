@@ -10,7 +10,8 @@
     "discord.js": "^11.5.1",
     "dotenv": "^8.2.0",
     "pg": "^8.5.1",
-    "tmi.js": "^1.8.3"
+    "tmi.js": "^1.8.3",
+    "websocket": "^1.0.34"
   },
   "devDependencies": {
     "discord.js": "^11.5.1",

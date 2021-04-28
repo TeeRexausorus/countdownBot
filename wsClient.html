@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Playground</title>
+</head>
+<body>
+    <div class="container">
+
+    </div>
+</body>
+<script>
+    const ws = new WebSocket('ws://localhost:8080/');
+    ws.onopen = function() {
+        console.log('WebSocket Client Connected');
+        ws.send('{"name": "gentilrex"}');
+    };
+    ws.onmessage = function(e) {
+        const position = JSON.parse(e.data);
+
+    };
+</script>
+</html>
